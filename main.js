@@ -6,9 +6,9 @@
 // PASTE YOUR URLs HERE
 // these URLs come from Google Sheets 'shareable link' form // the first is the geometry layer and the second the points
 let geomURL =  "https://docs.google.com/spreadsheets/d/e/2PACX-1vR1on0SyoQQfTL0lsTJTuZGotL3IRWj7raYbbnYy5WT83TiQUshrby-SHIducbO7j5T4H3t8x63OKQy/pub?output=csv";
-let pointsURL =  //"https://docs.google.com/spreadsheets/d/e/2PACX-1vR8kfDgeV5DH0yXntk8-b2WXs5oW_bHuJdNb4hDXPA6AilTSTsNvHieU9yEhP14uBxaj3wALggT03-D/pub?output=csv";
+let pointsURL =  "https://docs.google.com/spreadsheets/d/e/2PACX-1vR8kfDgeV5DH0yXntk8-b2WXs5oW_bHuJdNb4hDXPA6AilTSTsNvHieU9yEhP14uBxaj3wALggT03-D/pub?output=csv";
 	// Google spreadsheet Leaflet_points_COPIA con campo geometry (sin array para calculo automatico):
-	"https://docs.google.com/spreadsheets/d/e/2PACX-1vQbcdexNbJ3QYG2y7Ska32sodt5Ovv23_j_4wpK1UCMzmlKyUdTWQ4w2v69Q5LZ9aEzgf2lei-Ju9Lc/pub?gid=0&single=true&output=csv"
+	//"https://docs.google.com/spreadsheets/d/e/2PACX-1vQbcdexNbJ3QYG2y7Ska32sodt5Ovv23_j_4wpK1UCMzmlKyUdTWQ4w2v69Q5LZ9aEzgf2lei-Ju9Lc/pub?gid=0&single=true&output=csv"
 
 let pointsURL_lista = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQbcdexNbJ3QYG2y7Ska32sodt5Ovv23_j_4wpK1UCMzmlKyUdTWQ4w2v69Q5LZ9aEzgf2lei-Ju9Lc/pub?gid=2070618516&single=true&output=csv"
 
@@ -59,23 +59,13 @@ function init() {
     download: true,
     header: true,
     complete: addPoints,
-  }); 
-  Papa.parse(pointsURL_lista, {
-    download: true,
-    header: true,
-    complete: addPoints_lista,
-  });    
+  });   
 }//FinInit
 
 /////SeleccionandoESPECIE  	
 	window.onload = function () {
 		
 		document.getElementById("claseX").addEventListener("change", cargarEspecies); //mio
-		
-		function addPoints_lista(data) {
-			data = data.data;
-			console.log
-		}
 
 		function cargarEspecies() {
 			// Objeto de clases con especies
