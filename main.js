@@ -264,7 +264,7 @@ function addPoints(data) {
     case 'AVE':  return 'css/images/marker-icon-yellow.png';
 	 case 'REPTIL':  return 'css/images/marker-icon-green.png';
 	 case 'ANFIBIO':  return 'css/images/marker-icon-blue.png';
-    default:  return 'pink';
+    default:  return 'css/images/marker-icon-x2.png';
   }
 }
 
