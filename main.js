@@ -203,7 +203,7 @@ function addPoints(data) {
 					'Carretera: ' + e.target.feature.properties.Carretera + '<br/>' +	
 					'Pk: ' + e.target.feature.properties.Pk + '<br/>' +
 					//'Foto: ' + e.target.feature.properties.Foto + '<br/>' +
-					'Observaciones: ' + e.target.feature.properties.Observaciones + '<br/>' +
+					//'Observaciones: ' + e.target.feature.properties.Observaciones + '<br/>' +
 					'<img src="' + e.target.feature.properties.Foto + '" width="270">' 
 					);					
 				sidebar.open(panelID);
