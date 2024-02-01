@@ -192,7 +192,10 @@ function addPoints(data) {
 			  click: function (e) {
 				L.DomEvent.stopPropagation(e);
 				document.getElementById('sidebar-title').innerHTML = e.target.feature.properties.Especie;
-				document.getElementById('sidebar-content').innerHTML = (
+				let fotografia = e.target.feature.properties.Foto;
+				console.log(fotografia);
+				if (fotografia.includes("drive.google.com") == true)  {
+					document.getElementById('sidebar-content').innerHTML = (
 					'N: ' + e.target.feature.properties.N + '<br/>' +
 					'Usuario: ' + e.target.feature.properties.Usuario + '<br/>' +
 					'Fecha: ' + e.target.feature.properties.Fecha + '<br/>' +
@@ -202,12 +205,28 @@ function addPoints(data) {
 					'Frecuencia_paso: ' + e.target.feature.properties.Frecuencia_paso + '<br/>' +
 					'Carretera: ' + e.target.feature.properties.Carretera + '<br/>' +	
 					'Pk: ' + e.target.feature.properties.Pk + '<br/>' +
-					//'Foto: ' + e.target.feature.properties.Foto + '<br/>' +
+					//'Foto: ' + e.target.feature.properties.Foto + '<br/>' +	
+					'<a href="' + e.target.feature.properties.Foto + '">Descarga la foto del atropello</a><br/>'  
 					//'Observaciones: ' + e.target.feature.properties.Observaciones + '<br/>' +
-					'<img src="' + e.target.feature.properties.Foto + '" width="270">' 
-					);					
+					//Funcionan estos formatos de foto + el id al final: https://drive.google.com/uc?id= // https://drive.google.com/uc?export=download&id=
+					//No funciona'<iframe src="' + e.target.feature.properties.Foto + '" name="iframe_a" width="250"></iframe>' + '<br/>' +						
+					);
+				} else {
+					document.getElementById('sidebar-content').innerHTML = (
+					'N: ' + e.target.feature.properties.N + '<br/>' +
+					'Usuario: ' + e.target.feature.properties.Usuario + '<br/>' +
+					'Fecha: ' + e.target.feature.properties.Fecha + '<br/>' +
+					'Seguridad_id: ' + e.target.feature.properties.Seguridad_id + '<br/>' +
+					'Frecuencia_paso: ' + e.target.feature.properties.Frecuencia_paso + '<br/>' +
+					'Carretera: ' + e.target.feature.properties.Carretera + '<br/>' +	
+					'Pk: ' + e.target.feature.properties.Pk + '<br/>' +
+					//'<a href="' + e.target.feature.properties.Foto + '">Descarga la foto del atropello</a><br/>' + 
+					'<img src="' + e.target.feature.properties.Foto + '" width="250"><br/>'  //Esto funciona con las de Jotform
+					//'Observaciones: ' + e.target.feature.properties.Observaciones + '<br/>' +
+					);
+				}	
 				sidebar.open(panelID);
-			    },
+			 },
 			});
 			// COMMENT UNTIL HERE TO DISABLE SIDEBAR FOR THE MARKERS
 		  
