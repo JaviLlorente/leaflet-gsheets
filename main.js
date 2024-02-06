@@ -281,7 +281,7 @@ function addPoints(data) {
 //AñadirLista
 function addPoints_lista(data) {
 	data = data.data; 
-	console.log (data);
+	//console.log (data);
 	window.data = data; //Para enviar lista	
 }	
 
