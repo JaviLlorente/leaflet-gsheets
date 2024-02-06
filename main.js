@@ -6,9 +6,8 @@
 // PASTE YOUR URLs HERE
 // these URLs come from Google Sheets 'shareable link' form // the first is the geometry layer and the second the points
 let geomURL =  "https://docs.google.com/spreadsheets/d/e/2PACX-1vR1on0SyoQQfTL0lsTJTuZGotL3IRWj7raYbbnYy5WT83TiQUshrby-SHIducbO7j5T4H3t8x63OKQy/pub?output=csv";
-let pointsURL =  "https://docs.google.com/spreadsheets/d/e/2PACX-1vR8kfDgeV5DH0yXntk8-b2WXs5oW_bHuJdNb4hDXPA6AilTSTsNvHieU9yEhP14uBxaj3wALggT03-D/pub?output=csv";
-	// Google spreadsheet Leaflet_points_COPIA con campo geometry (sin array para calculo automatico):
-	//"https://docs.google.com/spreadsheets/d/e/2PACX-1vQbcdexNbJ3QYG2y7Ska32sodt5Ovv23_j_4wpK1UCMzmlKyUdTWQ4w2v69Q5LZ9aEzgf2lei-Ju9Lc/pub?gid=0&single=true&output=csv"
+let pointsURL =  "https://docs.google.com/spreadsheets/d/e/2PACX-1vR8kfDgeV5DH0yXntk8-b2WXs5oW_bHuJdNb4hDXPA6AilTSTsNvHieU9yEhP14uBxaj3wALggT03-D/pub?gid=0&single=true&output=csv";
+let points_listaURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR8kfDgeV5DH0yXntk8-b2WXs5oW_bHuJdNb4hDXPA6AilTSTsNvHieU9yEhP14uBxaj3wALggT03-D/pub?gid=284159536&single=true&output=csv" //sheet5
 
 window.addEventListener("DOMContentLoaded", init);
 
@@ -57,45 +56,51 @@ function init() {
     download: true,
     header: true,
     complete: addPoints,
-  });   
+  });
+  Papa.parse(points_listaURL, {
+	download: true,
+	header: false,
+	complete: addPoints_lista,
+  });  
 }//FinInit
 
-/////SeleccionandoESPECIE  	
-	window.onload = function () {
-		
-		document.getElementById("claseX").addEventListener("change", cargarEspecies); //mio
 
-		function cargarEspecies() {
-			// Objeto de clases con especies
-			var listaEspecies = {
-			"MAMIFERO": [ "Ardilla Roja","Armiño","Cabra Montés","Ciervo rojo","Comadreja","Conejo","Corzo","Erizo Europeo","Garduña","Gato Montés","Gineta","Jabalí","Liebre ibérica","Lirón careto","Lobo","Meloncillo","Murciélago sp","Nutria","Rata de Agua","Rata sp","Ratón sp","Tejón","Topillo sp","Topo Ibérico","Turón","Visón Americano","Zorro Rojo","MAMÍFERO no identificado con seguridad" ],
-			"AVE": [ "Abejaruco","Abubilla","Acentor Común","Agateador Común","Águila Calzada","Águila Imperial Ibérica","Águila Real","Aguilucho Cenizo","Aguilucho Lagunero","Aguilucho Pálido","Alcaraván","Alcaudón Común","Alcaudón Dorsirrojo","Alcaudón Real","Alcotán","Alondra Común","Alondra Totovía","Ánade Azulón","Andarríos Chico","Arrendajo","Autillo","Avefría Europea","Avión Común","Avión Roquero","Azor","Bisbita Pratense","Búho Campestre","Búho Chico","Búho Real","Buitre Leonado","Buitre Negro","Calandria","Cárabo","Carbonero Común","Carbonero Garrapinos","Carricero Común","Cerceta Común","Cernícalo Primilla","Cernícalo Vulgar","Chochín","Chotacabras Europeo (Gris)","Chova Piquirroja","Cigüeña Blanca","Cigüeña Negra","Cigüeñuela Común","Codorniz Común","Cogujada Común","Colirrojo Real","Colirrojo Tizón","Collalba Gris","Collalba Rubia","Cormorán Grande","Corneja","Críalo","Cuco","Cuervo","Culebrera Europea","Curruca Capirotada","Curruca Carrasqueña","Curruca Mirlona","Curruca Mosquitera","Curruca Rabilarga","Curruca Zarcera","Escribano Hortelano","Escribano Montesino","Escribano Soteño","Esmerejón","Estornino Negro","Estornino Pinto","Faisán","Focha Común","Gallineta Común","Garza Real","Gavilán","Gaviota Reidora ","Golondrina Común","Gorrión Chillón","Gorrión Común","Gorrión Molinero","Grajilla","Halcón Peregrino","Herrerillo Común","Jilguero","Lavandera Blanca","Lechuza","Martin Pescador","Milano Negro","Milano Real","Mirlo Común","Mito","Mochuelo","Mosquitero Común","Mosquitero Papialbo","Oropéndola","Paloma cimarrona","Paloma Torcaz","Papamoscas Cerrojillo","Pardillo","Pato Cuchara","Perdiz Roja","Petirrojo","Pico Picapinos","Picogordo","Pinzón Vulgar","Piquituerto","Pito Real","Rabilargo","Ratonero Común","Reyezuelo Listado","Ruiseñor Común","Tarabilla Común","Torcecuello","Tórtola Europea","Tórtola Turca","Trepador Azul","Triguero","Urraca","Vencejo","Verdecillo","Verderón","Zarcero Común","Zorzal Alirrojo","Zorzal Charlo","Zorzal Común","Zorzal Real","AVE no identificada con seguridad" ],
-			"REPTIL": [ "Culebra Bastarda","Culebra de Collar","Culebra de Escalera","Culebra Lisa Europea","Culebra Lisa Meridional","Culebra Viperina","Culebrilla ciega","Eslizón Tridáctilo Ibérico","Galápago de florida","Galápago Europeo","Galápago Leproso","Lagartija Carpetana","Lagartija Cenicienta","Lagartija Colilarga","Lagartija Ibérica","Lagartija Roquera","Lagarto Ocelado","Lagarto Verdinegro","Víbora Hocicuda","REPTIL no identificado con seguridad" ],
-			"ANFIBIO": [ "Gallipato","Rana Común","Rana Patilarga","Ranita de San Antonio","Salamandra Común","Sapillo Pintojo Ibérico","Sapillo Pintojo Ibérico","Sapo Común","Sapo Corredor","Sapo de Espuelas","Sapo Partero Común","Tritón Ibérico","Tritón Jaspeado","ANFIBIO no identificado con seguridad" ]
-			}
+window.onload = function () {	
+	document.getElementById("claseX").addEventListener("change", cargarEspecies); //mio
+	// CargaEspecies
+	function cargarEspecies() {
+		var listaEspecies = window.data; //recoge de addPoints_lista
+		var claseXs = document.getElementById('claseX')
+		var especieXs = document.getElementById('especieX')
+		var claseSeleccionada = claseXs.value
+		
+		// Se limpian las especies del desplegable
+		especieXs.innerHTML = '<option value="-">...</option>'
+		
+		if(claseSeleccionada !== "-"){
+			// Se seleccionan los especies y se ordenan
+			switch (claseSeleccionada) {
+				case "MAMIFERO": claseSeleccionada = 0; break;
+				case "AVE": claseSeleccionada = 1; break;
+				case "REPTIL": claseSeleccionada = 2; break;
+				case "ANFIBIO": claseSeleccionada = 3; break;	
+				default: claseSeleccionada = [];
+			}			
+			claseSeleccionada = listaEspecies[claseSeleccionada]
+			const filtrada = claseSeleccionada.filter(dato => dato != ''); //quita las celdas vacías
 			
-			var claseXs = document.getElementById('claseX')
-			var especieXs = document.getElementById('especieX')
-			var claseSeleccionada = claseXs.value
-			
-			// Se limpian los especies
-			especieXs.innerHTML = '<option value="-">...</option>'
-			
-			if(claseSeleccionada !== "-"){
-			  // Se seleccionan los especies y se ordenan
-			  claseSeleccionada = listaEspecies[claseSeleccionada]
-			  //claseSeleccionada.sort()
-			
-			  // Insertamos los especies
-			  claseSeleccionada.forEach(function(especieX){
+			// Insertamos las especies
+			filtrada.forEach(function(especieX){
 				let opcion = document.createElement('option')
 				opcion.value = especieX
 				opcion.text = especieX
 				especieXs.add(opcion)
-			  });
-			}			
-		} // Iniciar la carga de clases solo para comprobar que funciona			
-	} /////FIN ESPECIE
+				//document.getElementById("Narray3").value = filtrada.length; //nºespecies
+			});		
+		}	
+	} // FinCargaEspecies	
+}
+	
 
 /* ADDGEOM
  * Expects a JSON representation of the table with properties columns * and a 'geometry' column that can be parsed by parseGeom() */
@@ -151,8 +156,8 @@ function addGeoms(data) {
 function addPoints(data) {
 	data = data.data; 
 	var pointGroupLayer = L.layerGroup([]).addTo(map);
-	//window.data = data; //Creo que no hace falta	
-
+	//console.log (data);
+	
 	document.getElementById("claseX").addEventListener("change", filterData);
     document.getElementById("especieX").addEventListener("change", filterData);
 	
@@ -273,7 +278,13 @@ function addPoints(data) {
 	
 }; //FINADDPOINTS
    	
-	
+//AñadirLista
+function addPoints_lista(data) {
+	data = data.data; 
+	console.log (data);
+	window.data = data; //Para enviar lista	
+}	
+
 // Returns different colors depending on the string passed // Used for the points layer
   function getIcon(type) {
   switch (type) {
