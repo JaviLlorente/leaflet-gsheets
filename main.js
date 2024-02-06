@@ -72,7 +72,6 @@ function addPoints_lista(data) {
 	data = data.data; 
 	var listaEspecies = data;
 	console.log (data);
-	alert("cambiada");
 }
 
 /////SeleccionandoESPECIE  	
