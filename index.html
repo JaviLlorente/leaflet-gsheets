@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+	
         <title>Leaflet web map with Google Sheets</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,32 +9,58 @@
         <link rel="stylesheet" href="css/font-awesome.min.css"/>
         <link rel="stylesheet" href="css/leaflet.awesome-markers.css"/>
         <link rel="stylesheet" href="css/leaflet-sidebar.css"/>
-        <style>
-			body {
-				padding: 0;
-				margin: 0;
-			}
-			html, body, #map {
-				height: 98.65%;
-				width: 100%;
-			}
-			#sidebar-content, #sidebar-title {
-				word-break: break-word;
-				margin-right: 40px;
-			}
-
-        </style>
-    </head>
 		
+		<link rel="stylesheet" href="dist/nouislider.css"/>
+		
+		<style>
+		body { padding:0; margin:0; }
+		html, body, #map { height:100%; width:100%; }
+		
+		.leaflet-top { bottom:0; }
+		.leaflet-top .leaflet-control-zoom { top:5%; }		
+		#sidebar-content, #sidebar-title { word-break:break-word; margin-right:2.4em; }
+		.contador { width:2.57em; height:fit-content; float:right; text-align:right; margin-right:0.85em; background-color:#EAEDED; }
+	
+		.slider-contenedor-ver { height:auto; position:absolute; bottom:0; padding-bottom:1.7em; margin-left:0.9em; }
+		.slider-ver { height:17em; width:0.55em; }
+		.slider-ver .noUi-base { width:0.55em; border:1px solid #8f8f8f; border-radius:3px;  }			
+		.slider-ver .noUi-pips { font-size: 0.6em; }
+		.slider-ver .noUi-handle { height: 1.4em; float:left; left:-1.05em; }
+		.slider-ver .noUi-handle:hover .noUi-touch-area { border:1px dashed #7f7f7f; }
+		.slider-ver .noUi-handle .noUi-touch-area {
+			border:1px solid transparent; position:absolute;
+			top:-12px; left:-7px; right:-19px; bottom:-12px;
+			width:auto; height:auto;
+		}			
+        </style>
+		
+		<link id="themeVer" rel="stylesheet"  type="text/css" href="css/noSeleccionado.css" />
+	
+    </head>
+
     <body>	
+
+		<script src="dist/nouislider.js"></script>
+		<script src="js/wNumb.js"></script>
+		
+		<script src="js/leaflet.js"></script>
+        <script src="js/leaflet-sidebar.js"></script>
+        <script src="js/leaflet.awesome-markers.min.js"></script>
+        <script src="js/papaparse.min.js"></script>
+		
+		<script src="leafletspin/spin/spin.min.js" charset="utf-8"></script>
+		<script src="leafletspin/leaflet.spin.min.js"></script>
+		<script src="leafletspin/leaflet.spin.js"></script>
+		
+        <script src="main.js" defer></script>
+		
+		<!--ESPACIO DEL MAPA-->		
+		<font face="arial" color="black" >	
+		<div id="panel" style = "min-width:100%; margin-top:0.3em; background-color:transparent; position:absolute; z-index:1; ">
 			
-	<!--NUEVO-->
-		<font face="arial" size=2em color="black" >
-		<div id="panel" style = "margin-left:0px; background-color:#D3D3D3;">
-			
-			<form name="form1" id="form1" style="height:1.7em;" > 
-				<label>&nbsp;&nbsp;Clase</label>
-				<select name="claseX" id='claseX'>
+			<form name="form1" id="form1" style="font-size:0.8em; height:1.8em; margin-left:0.85em;" > 
+				<label>Clase</label>
+				<select name="claseX" id='claseX' style="margin-right:2em; ">
 					<option value="-"selected>Seleccione...</opcion>
 					<option value="MAMIFERO">MAMIFEROS</opcion>
 					<option value="AVE">AVES</opcion>
@@ -41,46 +68,27 @@
 					<option value="ANFIBIO">ANFIBIOS</opcion>					
 				</select>
 				
-				<label>&nbsp;&nbsp;&nbsp;Especie</label>
-				<select name="especieX" id='especieX'> 
+				<label>Especie</label>
+				<select name="especieX" id='especieX' style="margin-right:2em"> 
 					<option value="-">...</option> 
 				</select>
-
+				
+				<button id="boton" type="button" class="btn btn-primary btn-sm">Reiniciar filtros</button>
+				
 				<span name="form2" id="form2" style="height:auto;" >				
-					<input type="text" id="Narray" name="Narray" style="width: 2.7em; height: fit-content; float:right; text-align:right; margin-right:10px; background-color:#EAEDED" readonly><br><br>
+					<input class="contador" type="text" id="Narray" name="Narray" readonly ><br><br>
 				</span> 				
-			</form>
+			</form>			
 			
-			<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input 
-			  id="presc-filter"
-			  type="number"
-			  placeholder="Año"
-			/>-->			
-
-			<!--<label>&nbsp;&nbsp;&nbsp;Desde </label>
-			<input type="date" id="start" name="trip-start" />	
-			<label>&nbsp;hasta </label>
-			<input type="date" id="end" name="trip-end" />				
-			</form>-->
-			
-			<!--<input type="range" min="1" max="100" value="50" name="rango">-->
-						
-		</div>
+		</div>		
 		</font>
-		
-	<!--FIN DE NUEVO-->
-	<script src="js/leaflet.js"></script>
-        <script src="js/leaflet-sidebar.js"></script>
-        <script src="js/leaflet.awesome-markers.min.js"></script>
-        <script src="js/papaparse.min.js"></script>
-		
-	<script src="leafletspin/spin/spin.min.js" charset="utf-8"></script>
-	<script src="leafletspin/leaflet.spin.min.js"></script>
-	<script src="leafletspin/leaflet.spin.js"></script>
-		
-        <script src="main.js" defer></script>
-        <div id="map"></div>
-        
+	
+		<div class="slider-contenedor-ver" style=" z-index:2; ">			
+			<div class="slider-ver" id="slider-ver" ></div>
+		</div>
+	
+		<div id="map" style="position:absolute; z-index:0; "></div>	
+
     </body>
 	
 </html>
