@@ -16,52 +16,61 @@ let sidebar;
 let panelID = "my-info-panel";
 
 /* FUNCIONINIT
- * init() is called when the page has loaded
- */
+ * init() is called when the page has loaded */
 function init() {
-  // Create a new Leaflet map centered on the continental US
-  map = L.map('map').setView([41.10, -4.00], 9.4);
+	// Create a new Leaflet map centered on the continental US
+	map = L.map('map', { zoomControl: true } ).setView([41.09, -4.00], 9.4);
 
-  // This is the Carto Positron basemap
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	attribution: 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://cloudmade.com">CloudMade</a>',
-	maxZoom: 18,
-  }).addTo(map);
+	// This is the Carto Positron basemap
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: 'Map data &copy; <a href="https://openstreetmap.org">OpenStreetMap</a>' ,
+		//contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://cloudmade.com">CloudMade</a>',
+		maxZoom: 18,
+	}).addTo(map);
   
+	//Spin de carga
 	map.spin(true, {
-		lines: 13, length: 30
-	}); //on_spin
+		lines: 12, length: 40, width: 10, radius: 25, speed: 0.7, className: 'spinner', zIndex: 2000000000, position: 'absolute',
+		//scale: 1, corners: 1, color: '#ffffff', fadeColor: 'transparent', top: '50%', left: '50%', shadow: '0 0 1px transparent',		
+	}); //on_spin (https://spin.js.org/)
 
-  sidebar = L.control.sidebar({  container: "sidebar", closeButton: true, position: "right",  }).addTo(map);
+	//Sidebar de información
+	sidebar = L.control.sidebar({  container: "sidebar", closeButton: true, position: "right",  }).addTo(map);
+	const sidebarElement = document.querySelector('.leaflet-sidebar');
+	sidebarElement.style.marginTop = '1.6em';
+	//sidebarElement.style.marginBottom = '0.1em';
+  
+	let panelContent = {
+		id: panelID,
+		tab: "<i class='fa fa-bars active'></i>",
+		pane: "<p id='sidebar-content'></p>",
+		title: "<h2 id='sidebar-title'>No hay selección</h2>",		
+	};
+	sidebar.addPanel(panelContent);
 
-  let panelContent = {
-    id: panelID,
-    tab: "<i class='fa fa-bars active'></i>",
-    pane: "<p id='sidebar-content'></p>",
-    title: "<h2 id='sidebar-title'>Nothing selected</h2>",
-  };
-  sidebar.addPanel(panelContent);
+	map.on("click", function () {
+		sidebar.close(panelID);
+	});
 
-  map.on("click", function () {
-    sidebar.close(panelID);
-  });
-
-  // Use PapaParse to load data from Google Sheets // And call the respective functions to add those to the map.
-  Papa.parse(geomURL, {
-    download: true,
-    header: true,
-    complete: addGeoms,
-  });
-  Papa.parse(pointsURL, {
-    download: true,
-    header: true,
-    complete: addPoints,
-  });
-  Papa.parse(points_listaURL, {
-	download: true,
-	header: false,
-	complete: addPoints_lista,
-  });  
+	// Use PapaParse to load data from Google Sheets // And call the respective functions to add those to the map.
+	//Datos de poligono de provincia
+	Papa.parse(geomURL, {
+		download: true,
+		header: true,
+		complete: addGeoms,
+	});
+	//Datos de puntos
+	Papa.parse(pointsURL, {
+		download: true,
+		header: true,
+		complete: addPoints,
+	});
+	//Lista de especies
+	Papa.parse(points_listaURL, {
+		download: true,
+		header: false,
+		complete: addPoints_lista,
+	});  
 }//FinInit
 
 
@@ -69,7 +78,7 @@ window.onload = function () {
 	document.getElementById("claseX").addEventListener("change", cargarEspecies); //mio
 	// CargaEspecies
 	function cargarEspecies() {
-		var listaEspecies = window.data; //recoge de addPoints_lista
+		var listaEspecies = window.data; //recoge de addPoints_lista del window.data
 		var claseXs = document.getElementById('claseX')
 		var especieXs = document.getElementById('especieX')
 		var claseSeleccionada = claseXs.value
@@ -97,7 +106,7 @@ window.onload = function () {
 				especieXs.add(opcion)
 				//document.getElementById("Narray3").value = filtrada.length; //nºespecies
 			});		
-		}	
+		} 
 	} // FinCargaEspecies	
 }
 	
@@ -158,13 +167,36 @@ function addPoints(data) {
 	var pointGroupLayer = L.layerGroup([]).addTo(map);
 	//console.log (data);
 	
+	var slider = document.getElementById("slider-ver");
+	noUiSlider.create(slider, {
+		tooltips: {
+			to: function(value) { return ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'][Math.round(value) - 1]; }, 
+			//from: Number  //Math.round and -1, so 1.00 => 0, 2.00 => 2, etc.
+		},
+		behaviour: 'drag', //snap, tap
+		start: [1, 12],
+		connect: true,
+		range: {'min': 1, 'max': 12} ,
+		orientation: 'vertical',
+		step: 1,
+		//pips: { mode: 'range', density: 10,	format: { to: function(a){ return pipFormats[a]; } } },
+		pips: { mode: 'values', values: [], density: 9 },
+		format: wNumb({	decimals: 0	}),	
+	});
+	
+	boton.onclick =	function Reiniciar() { 
+		slider.noUiSlider.reset();
+		document.getElementById("claseX").value="-";
+		document.getElementById("especieX").value="-";
+		filterData();
+	}; //boton reinicio de filtros
+	
+	slider.noUiSlider.on('set', function( ) { filterData( ); } );
 	document.getElementById("claseX").addEventListener("change", filterData);
     document.getElementById("especieX").addEventListener("change", filterData);
 	
 	// RENDERING METHOD
-	function renderMarkers (data) {
-		
-		//map.spin(true, { lines: 13, length: 30 }); //on_spin //ya en inicio y aqui puede que retrase
+	function renderMarkers (data) {			
 		pointGroupLayer.clearLayers();
 	 
 		// Choose marker type. Options are: // (these are case-sensitive, defaults to marker!)
@@ -191,6 +223,7 @@ function addPoints(data) {
 				Fecha: data[row].Fecha,	Seguridad_id: data[row].Seguridad_id, Frecuencia_paso: data[row].Frecuencia_paso,
 				Carretera: data[row].Carretera,	Pk: data[row].Pk, Foto: data[row].Foto,	Observaciones: data[row].Observaciones,
 			  }	};
+			
 			marker.on({
 			  click: function (e) {
 				L.DomEvent.stopPropagation(e);
@@ -239,51 +272,68 @@ function addPoints(data) {
 				//shadowUrl: 'css/images/markers-shadow.png', //shadowSize: [30, 10], //shadowAnchor: [5, 5]
 			});
 			marker.setIcon(icon);			
-			pointGroupLayer.addLayer(marker);					
+			pointGroupLayer.addLayer(marker);			
 		} //Fin iteracion		
 		
-	//console.log(data);
-	document.getElementById("Narray").value = data.length;	//nºregistros
-	map.spin(false);  // spinoff
+		//console.log(data);
+		document.getElementById("Narray").value = data.length;	//nºregistros
+		map.spin(false);  // spinoff_1		
+		
     } //Fin Render
 	
 	//FILTERING LOGIC
-    function filterData () {	
-	
+    function filterData () {
+		//Pone la sidebar lateral a cero y la cierra
 		sidebar.close(panelID);
 		document.getElementById('sidebar-title').innerHTML = '';
 		document.getElementById('sidebar-content').innerHTML = ('');
 		
+		//Extrae los valores del slider de seleccion de mes
+		var slider_values = slider.noUiSlider.get();
+		var mestarValue = slider_values[0];
+		var mesendValue = slider_values[1];
+		//console.log(slider_values);	
+		
+		//primer filtro_CLASE
 		let simdFilteredData = [];
         let simdValue = document.getElementById("claseX").value;  
-        if (simdValue == "-") { simdFilteredData = data;  }   //en origen data era window.data, cambiar si no funciona
-        for (const d of data) { if (d.Clase == simdValue) { simdFilteredData.push(d); } }  //en origen data era window.data, cambiar si no funciona
-		
-        let filteredData = [];
-        let prescValue = document.getElementById("especieX").value; //INMPORTANTE!!!
-        if (prescValue == "-") { filteredData = simdFilteredData;  }
-        for (const d of simdFilteredData) { if (d.Especie == prescValue) { filteredData.push(d); } }	
-		
+        if (simdValue == "-") { simdFilteredData = data; 
+			//document.getElementById("claseX").style.color= "black"; 
+			}  //en origen data era window.data
+        else { for (const d of data) { if (d.Clase == simdValue) { simdFilteredData.push(d); } }; 
+			//document.getElementById("claseX").style.color= "red"; 
+			}
+			
+        //segundofiltro_ESPECIE
+		let filteredData = [];
+        let prescValue = document.getElementById("especieX").value; //IMPORTANTE!!!
+        if (prescValue == "-") { filteredData = simdFilteredData; 
+			//document.getElementById("especieX").style.color= "black"; 
+			}
+        else { for (const d of simdFilteredData) { if (d.Especie == prescValue) { filteredData.push(d); } };	
+			//document.getElementById("especieX").style.color= "red"; 
+			}
+
 		//alert("simdValue= " + simdValue + " / prescValue= " + prescValue);
 		
-		/*let filteredData = [];
-		let prescValue = document.getElementById("presc-filter").value;
-		if (prescValue === "-") {  filteredData = simdFilteredData; }
-		for (const d of simdFilteredData) { if (parseFloat(d.prescriptions) <= parseFloat(prescValue)) { filteredData.push(d); } }*/
+		//tercer filtro_MES
+		let filteredData2 = []; let filteredData3 = [];
+		if (mestarValue == 1 && mesendValue == 12) { filteredData3 = filteredData; document.getElementById("themeVer").href = "css/noSeleccionado.css"; } 
+		else { for (const d of filteredData) { if (parseFloat(d.Mes) >= parseFloat(mestarValue)) { filteredData2.push(d); } }
+			for (const d of filteredData2) { if (parseFloat(d.Mes) <= parseFloat(mesendValue)) { filteredData3.push(d); } } 
+			document.getElementById("themeVer").href = "css/seleccionado.css"; }
 		
-		renderMarkers(filteredData); //Renderizado desde los datos filtrados
-		
+		renderMarkers(filteredData3); //Renderizado desde los datos filtrados (para cada vez que se filtra)		
     }; //FinFiltro
 
-	renderMarkers(data); //Renderizado desde el conjunto de datos
-	
+	renderMarkers(data); //Renderizado desde el conjunto de datos (para primera carga)
 }; //FINADDPOINTS
    	
-//AñadirLista
+//AñadirListaEspecies
 function addPoints_lista(data) {
 	data = data.data; 
 	//console.log (data);
-	window.data = data; //Para enviar lista	
+	window.data = data; //Para enviar lista	y recuperarla en window.onload
 }	
 
 // Returns different colors depending on the string passed // Used for the points layer
