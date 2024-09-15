@@ -242,7 +242,7 @@ function addPoints(data) {
 					'Carretera: ' + e.target.feature.properties.Carretera + '<br/>' +	
 					'Pk: ' + e.target.feature.properties.Pk + '<br/>' +
 					//'Foto: ' + e.target.feature.properties.Foto + '<br/>' +	
-					'<a href="' + e.target.feature.properties.Foto + '">Descarga la foto del atropello</a><br/>' //+ //Esto para las de GoogleDrive
+					'<a href="' + e.target.feature.properties.Foto + '" target="_blank" rel="noopener noreferrer">Descarga la foto del atropello</a><br/>' //+ //Esto para las de GoogleDrive
 					//'<img src="' + e.target.feature.properties.Foto + '" width="250"><br/>'  + //Esto funciona con las de Jotform
 					//'Observaciones: ' + e.target.feature.properties.Observaciones + '<br/>' +
 					//Funcionan estos formatos de foto + el id al final: https://drive.google.com/uc?id= // https://drive.google.com/uc?export=download&id=
